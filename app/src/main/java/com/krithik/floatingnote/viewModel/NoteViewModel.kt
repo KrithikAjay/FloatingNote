@@ -27,14 +27,14 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
         } else {
             val newNote = notes.value!!
             Log.i("insert", newNote)
-            insertNote(Note(0, newNote)
+            insertNote(Note(0,newNote)
             )
             notes.value = ""
         }
     }
 
     fun addfromReply(string: String) {
-        insertNote(Note(0, string))
+        insertNote(Note(0,string))
 
 
     }

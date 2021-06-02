@@ -8,4 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#A9A9A9</color>
+    <color name="buttonLabel">#FFFFFF</color>
+    <color name="swiggy">#fc8019</color>
+    <color name="swiggy2">#FC8D30</color>
 </resources>

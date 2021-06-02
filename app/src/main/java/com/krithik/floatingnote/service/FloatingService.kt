@@ -19,7 +19,7 @@ const val INTENT_COMMAND_EXIT = "EXIT"
 const val INTENT_COMMAND_NOTE = "NOTE"
 const val INTENT_COMMAND_REPLY = "REPLY"
 const val REPLY_KEY = "reply_action"
-const val NOTIFICATION_ID = 1010
+//const val NOTIFICATION_ID = 1010
 
 
 const val NOTIFICATION_CHANNEL_GENERAL = "quicknote_general"
@@ -47,6 +47,7 @@ class FloatingService : Service() {
         val replyPendingIntent = PendingIntent.getActivity(
                 this, CODE_REPLY_INTENT, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT
         )
+
 
         val exitIntent = Intent(this, FloatingService::class.java).apply {
             putExtra(INTENT_COMMAND, INTENT_COMMAND_EXIT)
@@ -90,33 +91,34 @@ class FloatingService : Service() {
             build()
         }
         val replyAction = NotificationCompat.Action.Builder(
-                0, "Reply", replyPendingIntent
+                0, "Add Note", replyPendingIntent
         ).addRemoteInput(replyRemote)
                 .build()
 
 
-        val builder = NotificationCompat.Builder(
+       with(NotificationCompat.Builder(
                 this,
                 NOTIFICATION_CHANNEL_GENERAL
-        )
+        )) {
 
-                .setTicker(null)
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText(getString(R.string.notification_text))
-                .setAutoCancel(false)
-                .setOngoing(true)
-                .setSmallIcon(R.drawable.ic_baseline_add_24)
-                .setContentIntent(notePendingIntent)
-                .addAction(replyAction)
-                .addAction(
-                        NotificationCompat.Action(
-                                0,
-                                getString(R.string.notification_exit),
-                                exitPendingIntent
-                        ))
+               setTicker(null)
+               setContentTitle(getString(R.string.app_name))
+               setContentText(getString(R.string.notification_text))
+               setAutoCancel(false)
+               setOngoing(true)
+               setSmallIcon(R.drawable.ic_baseline_add_24)
+               setContentIntent(notePendingIntent)
+               addAction(replyAction)
+               addAction(
+                       NotificationCompat.Action(
+                               0,
+                               getString(R.string.notification_exit),
+                               exitPendingIntent
+                       ))
 
 
-        startForeground(CODE_FOREGROUND_SERVICE, builder.build())
+           startForeground(CODE_FOREGROUND_SERVICE, build())
+       }
 
 
     }

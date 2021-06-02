@@ -1,9 +1,7 @@
 package com.krithik.floatingnote
 
 
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.RemoteInput
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -13,11 +11,13 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.krithik.floatingnote.database.Note
 import com.krithik.floatingnote.database.NoteDatabase
 import com.krithik.floatingnote.database.NoteRepository
@@ -29,6 +29,7 @@ import com.krithik.floatingnote.viewModel.NoteViewModelFactory
 import com.krithik.floatingnote.viewModel.RecyclerViewAdapter
 
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener {
+    private val newWordActivityRequestCode = 1
     private lateinit var binding: ActivityMainBinding
     private lateinit var noteViewModel: NoteViewModel
     private lateinit var adapter: RecyclerViewAdapter
@@ -57,16 +58,22 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener {
             adapter.submitList(it)
         })
         receiveReplyInput()
+        binding.addButton.setOnClickListener {
+            val intent = Intent(this, AddNoteActivity::class.java)
+            startActivityForResult(intent, newWordActivityRequestCode)
+        }
 
     }
 
 
     private fun initRecyclerView() {
-        binding.noteRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.noteRecyclerView.layoutManager =
+            StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
         adapter = RecyclerViewAdapter(this)
         binding.noteRecyclerView.adapter = adapter
 
     }
+
 
     override fun onDeleteNote(note: Note) {
         noteViewModel.deleteNote(note)
@@ -74,6 +81,9 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener {
 
     private fun Context.startFloatingService(command: String = "") {
         val intent = Intent(this, FloatingService::class.java)
+
+
+
 
         if (command.isNotBlank()) intent.putExtra(INTENT_COMMAND, command)
         Log.i("Command", INTENT_COMMAND + command)
@@ -90,20 +100,17 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener {
     private fun receiveReplyInput() {
 
         val replyKey = REPLY_KEY
-        val channelID = NOTIFICATION_CHANNEL_GENERAL
-
         val intent = this.intent
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-
         val replyInput = RemoteInput.getResultsFromIntent(intent)
-
-
 
         if (replyInput != null) {
             val inputReplyString = replyInput.getCharSequence(replyKey).toString()
 
             noteViewModel.addfromReply(inputReplyString)
+
+
 //            val notificationId = NOTIFICATION_ID
+//            val channelID = NOTIFICATION_CHANNEL_GENERAL
 //
 //            val updateCurrentNotification =
 //                    NotificationCompat.Builder(this@MainActivity, channelID)
@@ -125,5 +132,29 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener {
 
         }
 
+
+    }
+
+    override fun onBackPressed() {
+        finishAffinity()
+        super.onBackPressed()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.i("RequestCode", requestCode.toString())
+        if (requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK) {
+            data?.getStringExtra(AddNoteActivity.EXTRA_REPLY)?.let {
+
+                noteViewModel.addfromReply(it)
+
+            }
+        } else {
+            Toast.makeText(
+                applicationContext,
+                R.string.empty_not_saved,
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 }
