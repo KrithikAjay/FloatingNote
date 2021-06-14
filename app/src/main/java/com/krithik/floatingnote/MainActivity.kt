@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
 
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
@@ -22,12 +23,18 @@ import com.krithik.floatingnote.service.*
 import com.krithik.floatingnote.viewModel.NoteViewModel
 import com.krithik.floatingnote.viewModel.RecyclerViewAdapter
 import dagger.android.AndroidInjection
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener {
     private val newWordActivityRequestCode = 1
     private lateinit var binding: ActivityMainBinding
-   @Inject lateinit var  noteViewModel : NoteViewModel
+    private val noteViewModel : NoteViewModel by viewModels()
+
+//     forDagger
+//     @Inject private lateinit var noteViewModel : NoteViewModel
+
     private lateinit var adapter: RecyclerViewAdapter
 
 
@@ -36,7 +43,8 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener {
     @RequiresApi(Build.VERSION_CODES.KITKAT_WATCH)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AndroidInjection.inject(this)
+        //dagger injection
+//        AndroidInjection.inject(this)
         startFloatingService()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.noteViewModel = noteViewModel

@@ -11,10 +11,11 @@ import com.krithik.floatingnote.MyApplication
 import com.krithik.floatingnote.R
 import com.krithik.floatingnote.database.Note
 import com.krithik.floatingnote.database.NoteRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-//@HiltViewModel
+@HiltViewModel
 class NoteViewModel @Inject constructor(
     private val repository: NoteRepository
     ) : ViewModel() {
