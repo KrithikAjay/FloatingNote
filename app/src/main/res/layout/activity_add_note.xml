@@ -1,9 +1,7 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <variable
-            name="word"
-            type="com.krithik.floatingnote.AddNoteActivity" />
+
     </data>
     <LinearLayout
         android:orientation="vertical"
@@ -19,6 +17,7 @@
             android:layout_marginEnd="16dp"
             android:fontFamily="sans-serif-condensed-medium"
             android:hint="@string/add_note"
+
             android:inputType="textAutoComplete"
             android:minHeight="@dimen/min_height"
             android:textColor="#090101"
@@ -31,7 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/big_padding"
             android:background="@drawable/button_border"
-            android:text="@string/button_save"
+            android:text="Save"
+
             android:textColor="@color/buttonLabel"
             app:backgroundTint="#FC8019"
            />

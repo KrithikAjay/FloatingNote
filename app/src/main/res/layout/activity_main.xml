@@ -21,16 +21,16 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:background="@color/swiggy2"
             android:fontFamily="sans-serif-condensed-medium"
-            android:text="Your Notes"
-            android:textAlignment="center"
-            android:textColor="#100A07"
-            android:textSize="30sp" />
+            android:text="   My Note List"
+            android:textColor="#F6F1EF"
+            android:textSize="26sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/noteRecyclerView"
-            android:layout_width="396dp"
-            android:layout_height="517dp"
+            android:layout_width="match_parent"
+            android:layout_height="554dp"
             android:layout_marginTop="16dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"

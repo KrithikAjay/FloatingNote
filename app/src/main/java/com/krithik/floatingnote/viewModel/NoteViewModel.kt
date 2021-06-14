@@ -1,23 +1,33 @@
 package com.krithik.floatingnote.viewModel
 
+import android.content.res.Resources
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.krithik.floatingnote.MainActivity
+import com.krithik.floatingnote.MyApplication
+import com.krithik.floatingnote.R
 import com.krithik.floatingnote.database.Note
 import com.krithik.floatingnote.database.NoteRepository
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
+//@HiltViewModel
+class NoteViewModel @Inject constructor(
+    private val repository: NoteRepository
+    ) : ViewModel() {
 
     val notes = MutableLiveData<String>()
+
     val noteList: LiveData<List<Note>> = repository.getAllNotes
     private val statusMessage = MutableLiveData<Event<String>>()
     val message: LiveData<Event<String>>
         get() = statusMessage
 
     init {
+
         notes.value = ""
     }
 
@@ -38,16 +48,28 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
 
 
     }
+    fun update(note: Note){
+        viewModelScope.launch {
+            repository.update(note)
+
+        }
+    }
 
     private fun insertNote(note: Note) {
         viewModelScope.launch {
             val newRowId = repository.insert(note)
+
             if (newRowId > -1) {
                 statusMessage.value = Event("Notes Inserted Successfully ")
             } else {
                 statusMessage.value = Event("Error Occurred")
             }
+
+
+
+
         }
+
 
     }
 

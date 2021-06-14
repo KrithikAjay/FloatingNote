@@ -4,47 +4,41 @@ package com.krithik.floatingnote
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.krithik.floatingnote.database.Note
-import com.krithik.floatingnote.database.NoteDatabase
-import com.krithik.floatingnote.database.NoteRepository
 import com.krithik.floatingnote.databinding.ActivityMainBinding
 import com.krithik.floatingnote.service.*
 
 import com.krithik.floatingnote.viewModel.NoteViewModel
-import com.krithik.floatingnote.viewModel.NoteViewModelFactory
 import com.krithik.floatingnote.viewModel.RecyclerViewAdapter
+import dagger.android.AndroidInjection
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener {
     private val newWordActivityRequestCode = 1
     private lateinit var binding: ActivityMainBinding
-    private lateinit var noteViewModel: NoteViewModel
+   @Inject lateinit var  noteViewModel : NoteViewModel
     private lateinit var adapter: RecyclerViewAdapter
+
+
 
 
     @RequiresApi(Build.VERSION_CODES.KITKAT_WATCH)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AndroidInjection.inject(this)
         startFloatingService()
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        val dao = NoteDatabase.getInstance(application).noteDao
-        val repository = NoteRepository(dao)
-        val factory = NoteViewModelFactory(repository)
-        noteViewModel = ViewModelProvider(this, factory).get(NoteViewModel::class.java)
         binding.noteViewModel = noteViewModel
         binding.lifecycleOwner = this
 
@@ -79,12 +73,10 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener {
         noteViewModel.deleteNote(note)
     }
 
+
+
     private fun Context.startFloatingService(command: String = "") {
         val intent = Intent(this, FloatingService::class.java)
-
-
-
-
         if (command.isNotBlank()) intent.putExtra(INTENT_COMMAND, command)
         Log.i("Command", INTENT_COMMAND + command)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -92,8 +84,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener {
         } else {
             this.startService(intent)
         }
-
-
     }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT_WATCH)

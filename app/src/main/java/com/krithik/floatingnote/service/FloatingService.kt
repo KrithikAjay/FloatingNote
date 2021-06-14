@@ -75,10 +75,7 @@ class FloatingService : Service() {
                                 NotificationManager.IMPORTANCE_DEFAULT
                         )
                 ) {
-                    enableLights(false)
-                    setShowBadge(false)
-                    enableVibration(false)
-                    setSound(null, null)
+
                     lockscreenVisibility = Notification.VISIBILITY_PUBLIC
                     manager.createNotificationChannel(this)
                 }
@@ -88,6 +85,8 @@ class FloatingService : Service() {
         }
         val replyRemote = RemoteInput.Builder(REPLY_KEY).run {
             setLabel("Insert your message here")
+            setTheme(R.style.Theme_AppCompat_Light)
+
             build()
         }
         val replyAction = NotificationCompat.Action.Builder(
@@ -101,7 +100,6 @@ class FloatingService : Service() {
                 NOTIFICATION_CHANNEL_GENERAL
         )) {
 
-               setTicker(null)
                setContentTitle(getString(R.string.app_name))
                setContentText(getString(R.string.notification_text))
                setAutoCancel(false)

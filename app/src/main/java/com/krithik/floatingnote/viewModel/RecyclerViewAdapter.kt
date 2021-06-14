@@ -25,7 +25,7 @@ class RecyclerViewAdapter(private val listener: RowClickListener) : ListAdapter<
     class ViewHolder(private val binding: ListItemBinding, private val listener: RowClickListener) : RecyclerView.ViewHolder(binding.root) {
         fun bind(note: Note) {
             binding.note = note
-            binding.imageView.setOnClickListener {
+            binding.deleteButton.setOnClickListener {
                 listener.onDeleteNote(note)
             }
 
@@ -48,6 +48,7 @@ class RecyclerViewAdapter(private val listener: RowClickListener) : ListAdapter<
 
     interface RowClickListener {
         fun onDeleteNote(note: Note)
+
 
     }
 

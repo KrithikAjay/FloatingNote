@@ -1,8 +1,9 @@
 package com.krithik.floatingnote.database
 
 import androidx.annotation.WorkerThread
+import javax.inject.Inject
 
-class NoteRepository(val dao: NoteDao) {
+class NoteRepository @Inject constructor(val dao: NoteDao) {
 
     val getAllNotes = dao.getAllNotes()
 
